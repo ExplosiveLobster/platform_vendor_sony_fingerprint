@@ -680,8 +680,10 @@ err_t fpc_init(fpc_imp_data_t **data, int event_fd)
 
     ALOGI("Starting app %s\n", FP_TZAPP_NAME);
     if (qsee_handle->load_trustlet(qsee_handle, &mFPC_handle, FP_TZAPP_PATH, FP_TZAPP_NAME, 128) < 0) {
-        ALOGE("Could not load app : %s\n", FP_TZAPP_NAME);
-        goto err_keymaster;
+        if (qsee_handle->load_trustlet(qsee_handle, &mFPC_handle, FP_TZAPP_PATH_VENDOR, FP_TZAPP_NAME, 128) < 0) {
+            ALOGE("Could not load app : %s\n", FP_TZAPP_NAME);
+            goto err_keymaster;
+        }
     }
 
     fpc_data->fpc_handle = mFPC_handle;
